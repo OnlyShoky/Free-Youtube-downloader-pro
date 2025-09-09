@@ -47,6 +47,30 @@
             overflow: hidden;
             box-shadow: 0 10px 30px var(--shadow);
             border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .language-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .language-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .language-btn:hover {
+            background: var(--accent);
+            color: white;
         }
 
         .header {
@@ -88,11 +112,6 @@
             color: var(--text-primary);
             display: flex;
             align-items: center;
-        }
-
-        .config-section h3::before {
-            content: "⚙️";
-            margin-right: 10px;
         }
 
         .input-group {
@@ -215,13 +234,6 @@
             font-weight: 500;
             margin-bottom: 20px;
             color: var(--text-primary);
-            display: flex;
-            align-items: center;
-        }
-
-        .video-info h3::before {
-            content: "📹";
-            margin-right: 10px;
         }
 
         .video-thumbnail {
@@ -389,72 +401,176 @@
             .btn {
                 width: 100%;
             }
+            
+            .language-switcher {
+                position: relative;
+                top: 0;
+                right: 0;
+                text-align: right;
+                margin-bottom: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="language-switcher">
+            <button class="language-btn" id="languageToggle">EN</button>
+        </div>
+
         <div class="header">
-            <h1>YouTube Downloader Pro</h1>
-            <p>Descarga videos y audio de YouTube en alta calidad</p>
+            <h1 data-i18n="title">YouTube Downloader Pro</h1>
+            <p data-i18n="subtitle">Descarga videos y audio de YouTube en alta calidad</p>
         </div>
 
         <div class="content">
             <div class="config-section">
-                <h3>Configuración</h3>
+                <h3 data-i18n="configTitle">Configuración</h3>
                 <div class="input-group">
-                    <label for="navegadorSelect">Navegador para cookies:</label>
+                    <label for="navegadorSelect" data-i18n="browserLabel">Navegador para cookies:</label>
                     <select id="navegadorSelect" class="navegador-select">
-                        <option value="">Cargando navegadores...</option>
+                        <option value="" data-i18n="loadingBrowsers">Cargando navegadores...</option>
                     </select>
                 </div>
                 <div id="navegadorInfo" class="info-text" style="display: none;">
-                    <p>Las cookies ayudan a evitar bloqueos de YouTube. Selecciona el navegador donde tengas sesión iniciada.</p>
+                    <p data-i18n="cookiesInfo">Las cookies ayudan a evitar bloqueos de YouTube. Selecciona el navegador donde tengas sesión iniciada.</p>
                 </div>
             </div>
 
             <div class="input-group">
-                <label for="videoUrl">URL del video de YouTube:</label>
+                <label for="videoUrl" data-i18n="urlLabel">URL del video de YouTube:</label>
                 <input type="url" id="videoUrl" class="url-input" placeholder="https://www.youtube.com/watch?v=..." required>
             </div>
 
-            <button id="btnInfo" class="btn btn-primary">Obtener Información del Video</button>
+            <button id="btnInfo" class="btn btn-primary" data-i18n="getInfoBtn">Obtener Información del Video</button>
 
             <div id="loading" class="loading" style="display: none;">
                 <div class="spinner"></div>
-                <p>Analizando video...</p>
+                <p data-i18n="analyzingVideo">Analizando video...</p>
             </div>
 
             <div id="error" class="error"></div>
 
             <div id="videoInfo" class="video-info">
-                <h3>Información del Video</h3>
+                <h3 data-i18n="videoInfoTitle">Información del Video</h3>
                 <img id="videoThumbnail" class="video-thumbnail" src="" alt="Miniatura">
-                <p><strong>Título:</strong> <span id="videoTitle"></span></p>
-                <p><strong>Autor:</strong> <span id="videoAuthor"></span></p>
-                <p><strong>Duración:</strong> <span id="videoDuration"></span></p>
-                <p><strong>Vistas:</strong> <span id="videoViews"></span></p>
+                <p><strong data-i18n="titleLabel">Título:</strong> <span id="videoTitle"></span></p>
+                <p><strong data-i18n="authorLabel">Autor:</strong> <span id="videoAuthor"></span></p>
+                <p><strong data-i18n="durationLabel">Duración:</strong> <span id="videoDuration"></span></p>
+                <p><strong data-i18n="viewsLabel">Vistas:</strong> <span id="videoViews"></span></p>
 
-                <h4>Selecciona el formato de descarga:</h4>
+                <h4 data-i18n="selectFormat">Selecciona el formato de descarga:</h4>
                 <div class="format-options" id="formatOptions">
                     <!-- Los formatos se insertarán aquí dinámicamente -->
                 </div>
 
-                <button id="btnDownload" class="btn btn-primary" disabled>Iniciar Descarga</button>
+                <button id="btnDownload" class="btn btn-primary" disabled data-i18n="startDownloadBtn">Iniciar Descarga</button>
             </div>
 
             <div id="downloadStatus" class="download-status">
-                <h3>Progreso de Descarga</h3>
+                <h3 data-i18n="downloadProgress">Progreso de Descarga</h3>
                 <div class="progress-bar">
                     <div class="progress" id="downloadProgress"></div>
                 </div>
-                <p id="statusText">Preparando descarga...</p>
-                <a id="downloadLink" class="download-link" style="display: none;">Descargar Archivo</a>
+                <p id="statusText" data-i18n="preparingDownload">Preparando descarga...</p>
+                <a id="downloadLink" class="download-link" style="display: none;" data-i18n="downloadFile">Descargar Archivo</a>
             </div>
         </div>
     </div>
 
     <script>
+        // Sistema de internacionalización
+        const translations = {
+            'es': {
+                'title': 'YouTube Downloader Pro',
+                'subtitle': 'Descarga videos y audio de YouTube en alta calidad',
+                'configTitle': 'Configuración',
+                'browserLabel': 'Navegador para cookies:',
+                'loadingBrowsers': 'Cargando navegadores...',
+                'cookiesInfo': 'Las cookies ayudan a evitar bloqueos de YouTube. Selecciona el navegador donde tengas sesión iniciada.',
+                'urlLabel': 'URL del video de YouTube:',
+                'getInfoBtn': 'Obtener Información del Video',
+                'analyzingVideo': 'Analizando video...',
+                'videoInfoTitle': 'Información del Video',
+                'titleLabel': 'Título:',
+                'authorLabel': 'Autor:',
+                'durationLabel': 'Duración:',
+                'viewsLabel': 'Vistas:',
+                'selectFormat': 'Selecciona el formato de descarga:',
+                'startDownloadBtn': 'Iniciar Descarga',
+                'downloadProgress': 'Progreso de Descarga',
+                'preparingDownload': 'Preparando descarga...',
+                'downloadFile': 'Descargar Archivo',
+                'unknown': 'Desconocida',
+                'unknownPlural': 'Desconocidas',
+                'errorNoUrl': 'Por favor, ingresa una URL válida de YouTube',
+                'errorNoFormat': 'Por favor, selecciona un formato primero',
+                'errorConnection': 'Error de conexión:',
+                'errorDownload': 'Error en la descarga:',
+                'errorGeneric': 'Error:',
+                'completed': '¡Descarga completada!',
+                'audio': 'Audio',
+                'video': 'Video',
+                'format': 'Formato:',
+                'noFormats': 'No se encontraron formatos de video. Intenta con otro navegador.'
+            },
+            'en': {
+                'title': 'YouTube Downloader Pro',
+                'subtitle': 'Download YouTube videos and audio in high quality',
+                'configTitle': 'Configuration',
+                'browserLabel': 'Browser for cookies:',
+                'loadingBrowsers': 'Loading browsers...',
+                'cookiesInfo': 'Cookies help avoid YouTube blocks. Select the browser where you are logged in.',
+                'urlLabel': 'YouTube video URL:',
+                'getInfoBtn': 'Get Video Information',
+                'analyzingVideo': 'Analyzing video...',
+                'videoInfoTitle': 'Video Information',
+                'titleLabel': 'Title:',
+                'authorLabel': 'Author:',
+                'durationLabel': 'Duration:',
+                'viewsLabel': 'Views:',
+                'selectFormat': 'Select download format:',
+                'startDownloadBtn': 'Start Download',
+                'downloadProgress': 'Download Progress',
+                'preparingDownload': 'Preparing download...',
+                'downloadFile': 'Download File',
+                'unknown': 'Unknown',
+                'unknownPlural': 'Unknown',
+                'errorNoUrl': 'Please enter a valid YouTube URL',
+                'errorNoFormat': 'Please select a format first',
+                'errorConnection': 'Connection error:',
+                'errorDownload': 'Download error:',
+                'errorGeneric': 'Error:',
+                'completed': 'Download completed!',
+                'audio': 'Audio',
+                'video': 'Video',
+                'format': 'Format:',
+                'noFormats': 'No video formats found. Try with another browser.'
+            }
+        };
+
+        let currentLanguage = 'en';
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+                        element.placeholder = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+            
+            // Actualizar el texto del botón de idioma
+            document.getElementById('languageToggle').textContent = lang === 'es' ? 'EN' : 'ES';
+            
+            // Guardar preferencia de idioma
+            localStorage.setItem('preferredLanguage', lang);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const videoUrl = document.getElementById('videoUrl');
             const btnInfo = document.getElementById('btnInfo');
@@ -469,10 +585,23 @@
             const downloadLink = document.getElementById('downloadLink');
             const navegadorSelect = document.getElementById('navegadorSelect');
             const navegadorInfo = document.getElementById('navegadorInfo');
+            const languageToggle = document.getElementById('languageToggle');
 
             let selectedFormat = null;
             let currentVideoInfo = null;
             let navegadorSeleccionado = 'chrome';
+
+            // Cargar idioma preferido si existe
+            const savedLanguage = localStorage.getItem('preferredLanguage');
+            if (savedLanguage) {
+                setLanguage(savedLanguage);
+            }
+
+            // Manejar el cambio de idioma
+            languageToggle.addEventListener('click', function() {
+                const newLanguage = currentLanguage === 'es' ? 'en' : 'es';
+                setLanguage(newLanguage);
+            });
 
             // Cargar navegadores disponibles
             cargarNavegadores();
@@ -498,7 +627,7 @@
                     
                 } catch (error) {
                     console.error('Error cargando navegadores:', error);
-                    navegadorSelect.innerHTML = '<option value="ninguno">Sin cookies (modo básico)</option>';
+                    navegadorSelect.innerHTML = `<option value="ninguno">${currentLanguage === 'es' ? 'Sin cookies (modo básico)' : 'No cookies (basic mode)'}</option>`;
                 }
             }
 
@@ -510,7 +639,7 @@
                 const url = videoUrl.value.trim();
                 
                 if (!url) {
-                    showError('Por favor, ingresa una URL válida de YouTube');
+                    showError(translations[currentLanguage]['errorNoUrl']);
                     return;
                 }
 
@@ -540,10 +669,10 @@
                             showWarning(data.advertencia);
                         }
                     } else {
-                        showError('Error: ' + (data.error || 'No se pudo obtener información del video'));
+                        showError(`${translations[currentLanguage]['errorGeneric']} ${data.error || (currentLanguage === 'es' ? 'No se pudo obtener información del video' : 'Could not get video information')}`);
                     }
                 } catch (error) {
-                    showError('Error de conexión: ' + error.message);
+                    showError(`${translations[currentLanguage]['errorConnection']} ${error.message}`);
                 } finally {
                     showLoading(false);
                 }
@@ -551,12 +680,12 @@
 
             btnDownload.addEventListener('click', async function() {
                 if (!selectedFormat || !currentVideoInfo) {
-                    showError('Por favor, selecciona un formato primero');
+                    showError(translations[currentLanguage]['errorNoFormat']);
                     return;
                 }
 
                 showDownloadStatus(true);
-                statusText.textContent = 'Iniciando descarga...';
+                statusText.textContent = translations[currentLanguage]['preparingDownload'];
                 downloadProgress.style.width = '10%';
 
                 try {
@@ -578,18 +707,18 @@
 
                     if (data.success) {
                         downloadProgress.style.width = '100%';
-                        statusText.textContent = '¡Descarga completada!';
+                        statusText.textContent = translations[currentLanguage]['completed'];
                         
                         // Crear enlace de descarga
                         downloadLink.href = `/api/download-file/${encodeURIComponent(data.archivo)}`;
                         downloadLink.download = (data.titulo + '.' + selectedFormat.formato).replace(/[^a-zA-Z0-9.-]/g, '_');
                         downloadLink.style.display = 'inline-block';
                     } else {
-                        showError('Error en la descarga: ' + (data.error || 'Error desconocido'));
+                        showError(`${translations[currentLanguage]['errorDownload']} ${data.error || (currentLanguage === 'es' ? 'Error desconocido' : 'Unknown error')}`);
                         showDownloadStatus(false);
                     }
                 } catch (error) {
-                    showError('Error de conexión: ' + error.message);
+                    showError(`${translations[currentLanguage]['errorConnection']} ${error.message}`);
                     showDownloadStatus(false);
                 }
             });
@@ -624,7 +753,7 @@
                         formatOptions.appendChild(card);
                     });
                 } else {
-                    formatOptions.innerHTML = '<div class="warning">No se encontraron formatos de video. Intenta con otro navegador.</div>';
+                    formatOptions.innerHTML = `<div class="warning">${translations[currentLanguage]['noFormats']}</div>`;
                 }
 
                 videoInfo.classList.add('visible');
@@ -634,8 +763,8 @@
                 const card = document.createElement('div');
                 card.className = 'format-card';
                 card.innerHTML = `
-                    <h4>${type === 'audio' ? 'Audio' : 'Video'} ${format.calidad}</h4>
-                    <p>Formato: ${format.formato.toUpperCase()}</p>
+                    <h4>${type === 'audio' ? translations[currentLanguage]['audio'] : translations[currentLanguage]['video']} ${format.calidad}</h4>
+                    <p>${translations[currentLanguage]['format']} ${format.formato.toUpperCase()}</p>
                 `;
 
                 card.addEventListener('click', () => {
@@ -661,7 +790,7 @@
             }
 
             function formatDuration(seconds) {
-                if (!seconds) return 'Desconocida';
+                if (!seconds) return translations[currentLanguage]['unknown'];
                 const hours = Math.floor(seconds / 3600);
                 const minutes = Math.floor((seconds % 3600) / 60);
                 const secs = seconds % 60;
@@ -673,7 +802,7 @@
             }
 
             function formatViews(views) {
-                if (!views) return 'Desconocidas';
+                if (!views) return translations[currentLanguage]['unknownPlural'];
                 if (views >= 1000000) {
                     return (views / 1000000).toFixed(1) + 'M';
                 } else if (views >= 1000) {
