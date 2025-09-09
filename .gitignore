@@ -1,7 +1,7 @@
 # Ignorar carpetas
 trash/
 descargas/
-download/
+downloads/
 
 # Ignorar archivo específico
 cookies.txt
