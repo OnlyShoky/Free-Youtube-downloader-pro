@@ -1,0 +1,7 @@
+# Ignorar carpetas
+trash/
+descargas/
+download/
+
+# Ignorar archivo específico
+cookies.txt
