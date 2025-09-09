@@ -4,7 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Downloader Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent: #3a6df0;
+            --accent-hover: #2855d6;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+            --border: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,161 +28,291 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
             min-height: 100vh;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 850px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow);
+            border: 1px solid var(--border);
         }
 
         .header {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            padding: 30px;
+            background: var(--bg-tertiary);
+            padding: 28px 32px;
             text-align: center;
+            border-bottom: 1px solid var(--border);
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
 
         .header p {
-            opacity: 0.9;
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-weight: 400;
         }
 
         .content {
-            padding: 30px;
+            padding: 32px;
+        }
+
+        .config-section {
+            background: var(--bg-tertiary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .config-section h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .config-section h3::before {
+            content: "⚙️";
+            margin-right: 10px;
         }
 
         .input-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 15px;
         }
 
-        .url-input {
+        .navegador-select, .url-input {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
+            padding: 14px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
             border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            font-size: 15px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            outline: none;
         }
 
-        .url-input:focus {
-            outline: none;
-            border-color: #667eea;
+        .navegador-select:focus, .url-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(58, 109, 240, 0.2);
+        }
+
+        .info-text {
+            background: rgba(58, 109, 240, 0.1);
+            padding: 14px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--accent);
         }
 
         .btn {
-            padding: 15px 30px;
+            padding: 14px 28px;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--accent);
             color: white;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(58, 109, 240, 0.25);
         }
 
-        .btn-secondary {
-            background: #f8f9fa;
-            color: #333;
-            border: 2px solid #ddd;
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
-        .btn-secondary:hover {
-            background: #e9ecef;
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(58, 109, 240, 0.2);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .error {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--error);
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 3px solid var(--error);
+            display: none;
+            font-size: 14px;
+        }
+
+        .error.visible {
+            display: block;
         }
 
         .video-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
+            background: var(--bg-tertiary);
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
             display: none;
         }
 
         .video-info.visible {
             display: block;
-            animation: fadeIn 0.5s;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .video-info h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .video-info h3::before {
+            content: "📹";
+            margin-right: 10px;
         }
 
         .video-thumbnail {
             width: 100%;
-            max-width: 300px;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            max-width: 320px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .video-info p {
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .video-info p strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .video-info h4 {
+            font-size: 16px;
+            font-weight: 500;
+            margin: 24px 0 16px;
+            color: var(--text-primary);
         }
 
         .format-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
         .format-card {
-            background: white;
+            background: var(--bg-primary);
             padding: 20px;
-            border-radius: 10px;
-            border: 2px solid #ddd;
+            border-radius: 8px;
+            border: 1px solid var(--border);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
             text-align: center;
         }
 
         .format-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border-color: #667eea;
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .format-card.selected {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            border-color: var(--accent);
+            background: rgba(58, 109, 240, 0.1);
+        }
+
+        .format-card h4 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .format-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
         }
 
         .download-status {
+            background: var(--bg-tertiary);
+            padding: 24px;
+            border-radius: 8px;
             text-align: center;
-            padding: 20px;
+            border: 1px solid var(--border);
             display: none;
         }
 
         .download-status.visible {
             display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .download-status h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: var(--text-primary);
         }
 
         .progress-bar {
             width: 100%;
-            height: 20px;
-            background: #f0f0f0;
+            height: 12px;
+            background: var(--bg-primary);
             border-radius: 10px;
             overflow: hidden;
             margin: 20px 0;
@@ -174,40 +320,39 @@
 
         .progress {
             height: 100%;
-            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            background: var(--accent);
             width: 0%;
-            transition: width 0.3s;
+            transition: width 0.4s ease;
+            border-radius: 10px;
         }
 
         .download-link {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+            display: inline-flex;
+            align-items: center;
+            padding: 14px 28px;
+            background: var(--success);
             color: white;
             text-decoration: none;
             border-radius: 8px;
-            font-weight: 600;
-            margin-top: 15px;
+            font-weight: 500;
+            margin-top: 16px;
+            transition: all 0.3s ease;
         }
 
         .download-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+            background: #43a047;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+        .warning {
+            background: rgba(255, 152, 0, 0.1);
+            border-left: 3px solid var(--warning);
+            padding: 14px;
+            margin: 16px 0;
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--warning);
         }
 
         @keyframes spin {
@@ -216,43 +361,33 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .error {
-            background: #ffe6e6;
-            color: #d63031;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            display: none;
-        }
-
-        .error.visible {
-            display: block;
         }
 
         @media (max-width: 768px) {
             .container {
-                margin: 10px;
                 border-radius: 10px;
             }
             
             .header {
-                padding: 20px;
+                padding: 24px 20px;
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 24px;
             }
             
             .content {
-                padding: 20px;
+                padding: 24px 20px;
             }
             
             .format-options {
                 grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                width: 100%;
             }
         }
     </style>
@@ -260,27 +395,26 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎬 YouTube Downloader Pro</h1>
+            <h1>YouTube Downloader Pro</h1>
             <p>Descarga videos y audio de YouTube en alta calidad</p>
         </div>
 
         <div class="content">
-            <!-- Sección de configuración -->
             <div class="config-section">
-                <h3>⚙️ Configuración</h3>
+                <h3>Configuración</h3>
                 <div class="input-group">
-                    <label for="navegadorSelect">🌐 Navegador para cookies:</label>
+                    <label for="navegadorSelect">Navegador para cookies:</label>
                     <select id="navegadorSelect" class="navegador-select">
                         <option value="">Cargando navegadores...</option>
                     </select>
                 </div>
                 <div id="navegadorInfo" class="info-text" style="display: none;">
-                    <p>💡 Las cookies ayudan a evitar bloqueos de YouTube. Selecciona el navegador donde tengas sesión iniciada.</p>
+                    <p>Las cookies ayudan a evitar bloqueos de YouTube. Selecciona el navegador donde tengas sesión iniciada.</p>
                 </div>
             </div>
 
             <div class="input-group">
-                <label for="videoUrl">🔗 URL del video de YouTube:</label>
+                <label for="videoUrl">URL del video de YouTube:</label>
                 <input type="url" id="videoUrl" class="url-input" placeholder="https://www.youtube.com/watch?v=..." required>
             </div>
 
@@ -294,14 +428,14 @@
             <div id="error" class="error"></div>
 
             <div id="videoInfo" class="video-info">
-                <h3>📹 Información del Video</h3>
+                <h3>Información del Video</h3>
                 <img id="videoThumbnail" class="video-thumbnail" src="" alt="Miniatura">
                 <p><strong>Título:</strong> <span id="videoTitle"></span></p>
                 <p><strong>Autor:</strong> <span id="videoAuthor"></span></p>
                 <p><strong>Duración:</strong> <span id="videoDuration"></span></p>
                 <p><strong>Vistas:</strong> <span id="videoViews"></span></p>
 
-                <h4>🎯 Selecciona el formato de descarga:</h4>
+                <h4>Selecciona el formato de descarga:</h4>
                 <div class="format-options" id="formatOptions">
                     <!-- Los formatos se insertarán aquí dinámicamente -->
                 </div>
@@ -310,12 +444,12 @@
             </div>
 
             <div id="downloadStatus" class="download-status">
-                <h3>📥 Progreso de Descarga</h3>
+                <h3>Progreso de Descarga</h3>
                 <div class="progress-bar">
                     <div class="progress" id="downloadProgress"></div>
                 </div>
                 <p id="statusText">Preparando descarga...</p>
-                <a id="downloadLink" class="download-link" style="display: none;">⬇️ Descargar Archivo</a>
+                <a id="downloadLink" class="download-link" style="display: none;">Descargar Archivo</a>
             </div>
         </div>
     </div>
@@ -500,7 +634,7 @@
                 const card = document.createElement('div');
                 card.className = 'format-card';
                 card.innerHTML = `
-                    <h4>${type === 'audio' ? '🎵 Audio' : '🎥 Video'} ${format.calidad}</h4>
+                    <h4>${type === 'audio' ? 'Audio' : 'Video'} ${format.calidad}</h4>
                     <p>Formato: ${format.formato.toUpperCase()}</p>
                 `;
 
@@ -526,7 +660,6 @@
                 videoInfo.insertBefore(warningDiv, videoInfo.firstChild);
             }
 
-            // Resto de funciones se mantienen igual...
             function formatDuration(seconds) {
                 if (!seconds) return 'Desconocida';
                 const hours = Math.floor(seconds / 3600);
